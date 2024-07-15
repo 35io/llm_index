@@ -10,13 +10,17 @@ class DefaultDataLoader(IDataLoader):
     _dataloaders = {}
     _train_dst = None
     _test_dst = None
+    _tokenizer = None
+
+    def __init__(self, tokenizer):
+        self._tokenizer = tokenizer
 
     def load(self, train_path: str, test_path: str = None, val_path: str = None):
         df = pd.read_csv(train_path, delimiter='\t', names=['label', 'sentence'])
         sentences = df.sentence.values[1:]
         labels = df.label.values[1:]
 
-        X_train = np.array(sentences)
+        X_train = np.array([self._tokenizer(_sentence, truncation=True, max_length=150, pad_to_max_length=True) for _sentence in sentences])
         y_train = np.array([int(_label) for _label in labels])
 
         df = pd.read_csv(test_path, delimiter='\t', names=['label', 'sentence'])
