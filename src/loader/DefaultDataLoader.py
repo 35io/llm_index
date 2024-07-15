@@ -20,14 +20,14 @@ class DefaultDataLoader(IDataLoader):
         sentences = df.sentence.values[1:]
         labels = df.label.values[1:]
 
-        X_train = np.array([self._tokenizer(_sentence, truncation=True, max_length=150, pad_to_max_length=True) for _sentence in sentences])
+        X_train = np.array([self._tokenizer(_sentence, truncation=True, max_length=150, pad_to_max_length=True).data for _sentence in sentences])
         y_train = np.array([int(_label) for _label in labels])
 
         df = pd.read_csv(test_path, delimiter='\t', names=['label', 'sentence'])
         sentences = df.sentence.values[1:]
         labels = df.label.values[1:]
 
-        X_test = np.array(sentences)
+        X_test = np.array([self._tokenizer(_sentence, truncation=True, max_length=150, pad_to_max_length=True).data for _sentence in sentences])
         y_test = np.array([int(_label) for _label in labels])
 
         self._train_dst = (X_train, y_train)
