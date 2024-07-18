@@ -20,6 +20,7 @@ class MainTask(object):
 
         loader = DefaultModelLoader()
         model, tokenizer = loader.load('D:\\tools\\llm\\models\\bert-base-uncased')
+        model.to(device)
         data_loader = DefaultDataLoader(tokenizer)
         data_loader.load('D:\\tools\\llm\\datasets\\SST-2\\train.tsv',
                          'D:\\tools\\llm\\datasets\\SST-2\\test.tsv',
@@ -29,6 +30,8 @@ class MainTask(object):
             for index, batch_data in tqdm(enumerate(data_loader.get_test_dataloader(16)), desc="inference process"):
                 labels = batch_data[1]
                 input_ids = batch_data[0]['input_ids']
+                input_ids = input_ids.to(device)
                 attention_mask = batch_data[0]['attention_mask']
+                attention_mask = attention_mask.to(device)
                 outputs = model(input_ids, token_type_ids=None, attention_mask=attention_mask)
                 logger.info(outputs)

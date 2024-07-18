@@ -16,8 +16,6 @@ class LLMDataset(Dataset):
             if not isinstance(data[key_name], dict):
                 data[key_name] = torch.tensor(data[key_name]).squeeze()
 
-        # label = torch.tensor(self.labels[item_idx]).squeeze().to(self.args.device)
-
         return data, torch.tensor(labels)
 
     def __len__(self):
